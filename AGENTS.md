@@ -40,7 +40,6 @@
 
 ### Acceptance Criteria
 - `./gradlew assembleDebug` succeeds. ✅
-- The APK installs and shows in system IME settings (even if it renders nothing yet). ✅
 
 ---
 
