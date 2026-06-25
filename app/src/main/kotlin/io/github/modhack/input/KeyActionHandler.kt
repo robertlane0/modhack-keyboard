@@ -3,11 +3,19 @@ package io.github.modhack.input
 import android.view.KeyEvent
 import io.github.modhack.keycodes.KeyCodes
 import io.github.modhack.model.Modifier
+import io.github.modhack.model.ShiftState
 import io.github.modhack.service.InputConnectionManager
 import io.github.modhack.service.MHInputService
 
 /**
  * Handles routing and execution of actions when a key is pressed.
+ *
+ * Supports:
+ * - Character input with shift/capitalization
+ * - Modifier chording (Ctrl+C, Alt+Tab, etc.)
+ * - One-shot shift (auto-release after next character)
+ * - Navigation, function keys, and special keys (Globe, Escape, Tab)
+ * - Backspace with word composer integration
  */
 class KeyActionHandler(
     private val service: MHInputService,
@@ -15,12 +23,43 @@ class KeyActionHandler(
     private val wordComposer: WordComposer
 ) {
     /**
+     * Tracks whether shift should auto-release after the next character (one-shot shift).
+     */
+    private var shiftOneShot = false
+
+    /**
      * Main entry point for key dispatch.
      *
      * @param primaryCode The main keycode emitted by the pressed key.
      */
     fun onKey(primaryCode: Int) {
         when {
+            primaryCode == KeyCodes.SHIFT -> handleShift()
+            primaryCode == KeyCodes.DELETE -> handleBackspace()
+            primaryCode == KeyCodes.SPACE -> {
+                wordComposer.reset()
+                inputConnectionManager.commitText(" ")
+                releaseOneShotShift()
+            }
+            primaryCode == KeyCodes.ENTER -> {
+                wordComposer.reset()
+                inputConnectionManager.sendKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER))
+                inputConnectionManager.sendKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER))
+                releaseOneShotShift()
+            }
+            primaryCode == KeyCodes.TAB -> {
+                sendTab()
+                releaseOneShotShift()
+            }
+            primaryCode == KeyCodes.ESCAPE -> {
+                sendEscape()
+                releaseOneShotShift()
+            }
+            primaryCode == KeyCodes.SYMBOL -> handleSymbolSwitch()
+            primaryCode == KeyCodes.NEXT_LANGUAGE -> handleNextLanguage()
+            primaryCode == KeyCodes.PREV_LANGUAGE -> handleNextLanguage()
+            primaryCode == KeyCodes.F1 -> handleSpecialKey(KeyEvent.KEYCODE_F1)
+            primaryCode == KeyCodes.SETTINGS -> handleSettings()
             KeyCodes.isModifier(primaryCode) -> {
                 Modifier.fromKeyCode(primaryCode)?.let { handleModifier(it) }
             }
@@ -30,20 +69,6 @@ class KeyActionHandler(
             KeyCodes.isFunctionKey(primaryCode) -> {
                 handleFunctionKey(primaryCode)
             }
-            primaryCode == KeyCodes.DELETE -> handleBackspace()
-            primaryCode == KeyCodes.SHIFT -> handleShift()
-            primaryCode == KeyCodes.TAB -> sendTab()
-            primaryCode == KeyCodes.ESCAPE -> sendEscape()
-            primaryCode == KeyCodes.SYMBOL -> handleSymbolSwitch()
-            primaryCode == KeyCodes.SPACE -> {
-                wordComposer.reset()
-                inputConnectionManager.commitText(" ")
-            }
-            primaryCode == KeyCodes.ENTER -> {
-                wordComposer.reset()
-                inputConnectionManager.sendKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER))
-                inputConnectionManager.sendKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER))
-            }
             primaryCode > 0 -> {
                 handleCharacter(primaryCode)
             }
@@ -52,17 +77,18 @@ class KeyActionHandler(
 
     private fun handleCharacter(code: Int) {
         val metaState = ModifierState.getMetaState()
-        if (metaState != 0 && metaState != KeyEvent.META_SHIFT_ON) {
-            // Send as modified key event rather than text
+        val hasNonShiftModifier = metaState != 0 && metaState != KeyEvent.META_SHIFT_ON
+
+        if (hasNonShiftModifier) {
             inputConnectionManager.sendModifiedKeyEvent(code, ModifierState.activeModifiers.value)
         } else {
-            // Apply shift if needed (basic stub implementation)
             val isShifted = ModifierState.isActive(Modifier.SHIFT)
             val char = if (isShifted) code.toChar().uppercaseChar() else code.toChar()
             
             wordComposer.addKeyCode(char.code)
             inputConnectionManager.commitText(char.toString())
         }
+        releaseOneShotShift()
     }
 
     private fun handleBackspace() {
@@ -76,15 +102,48 @@ class KeyActionHandler(
     }
 
     private fun handleShift() {
-        ModifierState.toggle(Modifier.SHIFT)
+        val currentShift = ModifierState.isActive(Modifier.SHIFT)
+        if (currentShift && !shiftOneShot) {
+            // Shift is already on from a previous press — lock it
+            shiftOneShot = false
+        } else if (!currentShift) {
+            // Turn on shift in one-shot mode (auto-release after next key)
+            ModifierState.press(Modifier.SHIFT)
+            shiftOneShot = true
+        } else {
+            // shiftOneShot is true — pressing shift again locks it
+            shiftOneShot = false
+        }
+    }
+
+    /**
+     * Releases one-shot shift if active (after the next character is typed).
+     */
+    private fun releaseOneShotShift() {
+        if (shiftOneShot) {
+            shiftOneShot = false
+            ModifierState.release(Modifier.SHIFT)
+        }
     }
 
     private fun handleModifier(modifier: Modifier) {
         ModifierState.toggle(modifier)
     }
 
+    private fun handleNextLanguage() {
+        service.switchToNextLanguage()
+    }
+
+    private fun handleSpecialKey(androidKeyCode: Int) {
+        inputConnectionManager.sendKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, androidKeyCode))
+        inputConnectionManager.sendKeyEvent(KeyEvent(KeyEvent.ACTION_UP, androidKeyCode))
+    }
+
+    private fun handleSettings() {
+        // Settings launch handled by the service or activity starter
+    }
+
     private fun sendTab() {
-        // connectbot tab hack can be checked here using preferences flow
         inputConnectionManager.sendKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_TAB))
         inputConnectionManager.sendKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_TAB))
     }
@@ -105,7 +164,6 @@ class KeyActionHandler(
     }
 
     private fun handleSymbolSwitch() {
-        // Mode switching is handled by the service observing this action
         service.toggleSymbolsMode()
     }
 }

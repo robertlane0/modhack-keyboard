@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    XKB-style key symbol naming conventions for locale-specific keymaps.
+
+    This file maps logical key positions to their symbol names for each
+    supported locale. When a locale-specific layout is loaded from
+    res/xml-{locale}/, the loader consults this mapping to resolve
+    the correct label and code for each key based on its XKB symbol name.
+
+    Symbol names follow the pattern: <group><level>
+    - group: base, shift, altgr, shift_altgr
+    - level: 1 (unshifted), 2 (shifted), 3 (AltGr), 4 (shift+AltGr)
+
+    Example: "adiaeresis" = ä, "Adiaeresis" = Ä (shifted)
+-->
+<resources>
+    <!--
+        Key symbol definitions per locale. Each locale maps XKB symbol names
+        to the Unicode characters or keycodes that should be produced.
+
+        For the base English layout, symbols map directly to ASCII.
+        Locale-specific overrides replace keys at the same logical position.
+    -->
+
+    <!-- German (de) overrides for the base QWERTZ layout -->
+    <string-array name="keymap_de_base">
+        <item>y</item>  <!-- y ↔ z swap for QWERTZ -->
+        <item>z</item>
+        <item>ü</item>
+        <item>ä</item>
+        <item>ö</item>
+        <item>ß</item>
+        <item>#</item>
+        <item>\u00e4</item>  <!-- ä -->
+        <item>\u00f6</item>  <!-- ö -->
+        <item>\u00fc</item>  <!-- ü -->
+        <item>\u00df</item>  <!-- ß -->
+    </string-array>
+    <string-array name="keymap_de_shift">
+        <item>Y</item>
+        <item>Z</item>
+        <item>Ü</item>
+        <item>Ä</item>
+        <item>Ö</item>
+        <item>SS</item>
+        <item>\u00b0</item>  <!-- ° -->
+        <item>\u00c4</item>  <!-- Ä -->
+        <item>\u00d6</item>  <!-- Ö -->
+        <item>\u00dc</item>  <!-- Ü -->
+    </string-array>
+
+    <!-- French (fr) AZERTY overrides -->
+    <string-array name="keymap_fr_base">
+        <item>a</item>
+        <item>z</item>
+        <item>e</item>
+        <item>r</item>
+        <item>t</item>
+        <item>y</item>
+        <item>u</item>
+        <item>i</item>
+        <item>o</item>
+        <item>p</item>
+        <item>q</item>
+        <item>m</item>
+        <item>\u00e8</item>  <!-- è -->
+        <item>\u00e9</item>  <!-- é -->
+        <item>\u00e7</item>  <!-- ç -->
+        <item>\u00e0</item>  <!-- à -->
+        <item>\u00b0</item>  <!-- ° -->
+    </string-array>
+    <string-array name="keymap_fr_shift">
+        <item>A</item>
+        <item>Z</item>
+        <item>E</item>
+        <item>R</item>
+        <item>T</item>
+        <item>Y</item>
+        <item>U</item>
+        <item>I</item>
+        <item>O</item>
+        <item>P</item>
+        <item>Q</item>
+        <item>M</item>
+        <item>\u00c8</item>  <!-- È -->
+        <item>\u00c9</item>  <!-- É -->
+        <item>\u00c7</item>  <!-- Ç -->
+        <item>\u00c0</item>  <!-- À -->
+        <item>\u00b0</item>  <!-- ° -->
+    </string-array>
+
+    <!-- Spanish (es) overrides -->
+    <string-array name="keymap_es_base">
+        <item>\u00f1</item>  <!-- ñ -->
+        <item>\u00e1</item>  <!-- á -->
+        <item>\u00e9</item>  <!-- é -->
+        <item>\u00ed</item>  <!-- í -->
+        <item>\u00f3</item>  <!-- ó -->
+        <item>\u00fa</item>  <!-- ú -->
+    </string-array>
+    <string-array name="keymap_es_shift">
+        <item>\u00d1</item>  <!-- Ñ -->
+        <item>\u00c1</item>  <!-- Á -->
+        <item>\u00c9</item>  <!-- É -->
+        <item>\u00cd</item>  <!-- Í -->
+        <item>\u00d3</item>  <!-- Ó -->
+        <item>\u00da</item>  <!-- Ú -->
+    </string-array>
+
+    <!-- Russian (ru) Cyrillic overrides -->
+    <string-array name="keymap_ru_base">
+        <item>\u0439</item>  <!-- й -->
+        <item>\u0446</item>  <!-- ц -->
+        <item>\u0443</item>  <!-- у -->
+        <item>\u043a</item>  <!-- к -->
+        <item>\u0435</item>  <!-- е -->
+        <item>\u043d</item>  <!-- н -->
+        <item>\u0433</item>  <!-- г -->
+        <item>\u0448</item>  <!-- ш -->
+        <item>\u0449</item>  <!-- щ -->
+        <item>\u0437</item>  <!-- з -->
+        <item>\u0445</item>  <!-- х -->
+        <item>\u044a</item>  <!-- ъ -->
+        <item>\u0444</item>  <!-- ф -->
+        <item>\u044b</item>  <!-- ы -->
+        <item>\u0432</item>  <!-- в -->
+        <item>\u0430</item>  <!-- а -->
+        <item>\u043f</item>  <!-- п -->
+        <item>\u0440</item>  <!-- р -->
+        <item>\u043e</item>  <!-- о -->
+        <item>\u043b</item>  <!-- л -->
+        <item>\u0434</item>  <!-- д -->
+        <item>\u0436</item>  <!-- ж -->
+        <item>\u044d</item>  <!-- э -->
+        <item>\u044f</item>  <!-- я -->
+        <item>\u0447</item>  <!-- ч -->
+        <item>\u0441</item>  <!-- с -->
+        <item>\u043c</item>  <!-- м -->
+        <item>\u0438</item>  <!-- и -->
+        <item>\u0442</item>  <!-- т -->
+        <item>\u044c</item>  <!-- ь -->
+        <item>\u0431</item>  <!-- б -->
+        <item>\u044e</item>  <!-- ю -->
+        <item>\u0451</item>  <!-- ё -->
+    </string-array>
+    <string-array name="keymap_ru_shift">
+        <item>\u0419</item>  <!-- Й -->
+        <item>\u0426</item>  <!-- Ц -->
+        <item>\u0423</item>  <!-- У -->
+        <item>\u041a</item>  <!-- К -->
+        <item>\u0415</item>  <!-- Е -->
+        <item>\u041d</item>  <!-- Н -->
+        <item>\u0413</item>  <!-- Г -->
+        <item>\u0428</item>  <!-- Ш -->
+        <item>\u0429</item>  <!-- Щ -->
+        <item>\u0417</item>  <!-- З -->
+        <item>\u0425</item>  <!-- Х -->
+        <item>\u042a</item>  <!-- Ъ -->
+        <item>\u0424</item>  <!-- Ф -->
+        <item>\u042b</item>  <!-- Ы -->
+        <item>\u0412</item>  <!-- В -->
+        <item>\u0410</item>  <!-- А -->
+        <item>\u041f</item>  <!-- П -->
+        <item>\u0420</item>  <!-- Р -->
+        <item>\u041e</item>  <!-- О -->
+        <item>\u041b</item>  <!-- Л -->
+        <item>\u0414</item>  <!-- Д -->
+        <item>\u0416</item>  <!-- Ж -->
+        <item>\u042d</item>  <!-- Э -->
+        <item>\u042f</item>  <!-- Я -->
+        <item>\u0427</item>  <!-- Ч -->
+        <item>\u0421</item>  <!-- С -->
+        <item>\u041c</item>  <!-- М -->
+        <item>\u0418</item>  <!-- И -->
+        <item>\u0422</item>  <!-- Т -->
+        <item>\u042c</item>  <!-- Ь -->
+        <item>\u0411</item>  <!-- Б -->
+        <item>\u042e</item>  <!-- Ю -->
+        <item>\u0401</item>  <!-- Ё -->
+    </string-array>
+</resources>

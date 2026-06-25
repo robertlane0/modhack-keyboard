@@ -67,6 +67,7 @@ data class Key(
     val hint: String? = null,
     val altHint: String? = null,
     val icon: ImageVector? = null,
+    val iconResId: Int = 0,
     val width: Int,
     val height: Int,
     val x: Int = 0,

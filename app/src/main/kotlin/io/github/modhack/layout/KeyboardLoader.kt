@@ -61,17 +61,21 @@ class KeyboardLoader(private val context: Context) {
             eventType = parser.next()
         }
         
-        // Compute positions
+        // Compute Y positions for each key within each row
         var y = 0
-        for (row in rows) {
+        val positionedRows = rows.map { row ->
             var x = 0
-            for (key in row.keys) {
-                // To properly mutate x and y, we need to rebuild the list
-                // For simplicity, we just use the data class copy
+            val positionedKeys = row.keys.map { key ->
+                val positioned = key.copy(x = x, y = y)
+                x += key.width
+                positioned
             }
+            val positionedRow = row.copy(keys = positionedKeys)
+            y += row.defaultHeight
+            positionedRow
         }
 
-        return KeyboardLayout(id, rows, 100, rows.size * defaultHeight, keyboardMode)
+        return KeyboardLayout(id, positionedRows, 100, y, keyboardMode)
     }
 
     private fun parseRow(parser: XmlResourceParser, defaultKbWidth: Int, defaultKbHeight: Int): Row? {
@@ -79,6 +83,7 @@ class KeyboardLoader(private val context: Context) {
         val defaultWidth = getDimensionOrFraction(a, R.styleable.Row_keyWidth, 100, defaultKbWidth)
         val defaultHeight = getDimensionOrFraction(a, R.styleable.Row_keyHeight, 100, defaultKbHeight)
         val mode = a.getInt(R.styleable.Row_mode, 0)
+        val isExtension = a.getBoolean(R.styleable.Row_isExtension, false)
         a.recycle()
 
         val keys = mutableListOf<Key>()
@@ -96,7 +101,7 @@ class KeyboardLoader(private val context: Context) {
             eventType = parser.next()
         }
 
-        return Row(keys, defaultHeight, defaultWidth, mode, false)
+        return Row(keys, defaultHeight, defaultWidth, mode, isExtension)
     }
 
     private fun parseKey(parser: XmlResourceParser, xPos: Int, rowDefaultWidth: Int, rowDefaultHeight: Int): Key {
@@ -108,6 +113,7 @@ class KeyboardLoader(private val context: Context) {
         val shiftLabel = a.getString(R.styleable.Key_shiftLabel) ?: ""
         val hint = a.getString(R.styleable.Key_hint)
         val altHint = a.getString(R.styleable.Key_altHint)
+        val iconResId = a.getResourceId(R.styleable.Key_iconSrc, 0)
         val isModifier = a.getBoolean(R.styleable.Key_isModifier, false)
         val isRepeatable = a.getBoolean(R.styleable.Key_isRepeatable, false)
         val isCursor = a.getBoolean(R.styleable.Key_isCursor, false)
@@ -123,7 +129,8 @@ class KeyboardLoader(private val context: Context) {
             shiftLabel = shiftLabel,
             hint = hint,
             altHint = altHint,
-            icon = null, // Parsing vectors requires more logic, omitted for stub
+            icon = null, // Icon loaded by UI layer via iconResId
+            iconResId = iconResId,
             width = width,
             height = height,
             x = xPos,

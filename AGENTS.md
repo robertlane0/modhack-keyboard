@@ -19,8 +19,8 @@
 
 ---
 
-> **Build status:** `./gradlew assembleRelease` succeeds (50 tasks, 10 executed, 40 up-to-date).
-> **Phase 0/1/5:** ✅ Complete &middot; **Phase 2/3:** 🟡 Mostly done &middot; **Phase 4/6:** 🟡 Partial &middot; **Phase 7/8:** ❌ Mostly stubs
+> **Build status:** `./gradlew assembleRelease` succeeds (50 tasks, 49 executed, 1 up-to-date).
+> **Phase 0/1/2/3/5:** ✅ Complete &middot; **Phase 4/6:** 🟡 Partial &middot; **Phase 7/8:** ❌ Mostly stubs
 
 ## Phase 0 — Project Scaffolding
 
@@ -77,8 +77,8 @@
 | 2.1 | Create the base English QWERTY layout XML `kbd_qwerty.xml` (4-row) per §14.1. | ✅ | `res/xml/kbd_qwerty.xml` |
 | 2.2 | Create `kbd_full.xml` (5-row + F-keys) and `kbd_full_fn.xml` (5-row + Fn). | ✅ | `res/xml/kbd_full.xml`, `res/xml/kbd_full_fn.xml` |
 | 2.3 | Create `kbd_symbols.xml` and `kbd_phone.xml`. | ✅ | `res/xml/kbd_symbols.xml`, `res/xml/kbd_phone.xml` |
-| 2.4 | Create `donottranslate-keymap.xml` with XKB-style key symbol naming (§14.2). | ❌ | `res/xml/donottranslate-keymap.xml` |
-| 2.5 | Implement `KeyboardLoader.kt` — XML parser that produces `KeyboardLayout` from XML resources using `XmlPullParser`. | 🟡 | `layout/KeyboardLoader.kt` |
+| 2.4 | Create `donottranslate-keymap.xml` with XKB-style key symbol naming (§14.2). | ✅ | `res/xml/donottranslate_keymap.xml` |
+| 2.5 | Implement `KeyboardLoader.kt` — XML parser that produces `KeyboardLayout` from XML resources using `XmlPullParser`. | ✅ | `layout/KeyboardLoader.kt` |
 | 2.6 | Implement `LayoutCache.kt` — LRU cache keyed by `LayoutId(mode, locale, orientation, fullMode)` (§7.2). Loads on `Dispatchers.IO`. | ✅ | `layout/LayoutCache.kt` |
 
 ### Acceptance Criteria
@@ -95,10 +95,10 @@
 
 | # | Task | Status | Output Files |
 |---|------|--------|-------------|
-| 3.1 | Implement `MHInputService.kt` — `onCreate`, `onCreateInputView` (returns `ComposeView`), `onStartInput` (§6.1). Wire `keyboardState`, `suggestions`, and `preferences` StateFlows. | 🟡 | `service/MHInputService.kt` |
+| 3.1 | Implement `MHInputService.kt` — `onCreate`, `onCreateInputView` (returns `ComposeView`), `onStartInput` (§6.1). Wire `keyboardState`, `suggestions`, and `preferences` StateFlows. | ✅ | `service/MHInputService.kt` |
 | 3.2 | Implement `InputConnectionManager.kt` — wraps `getCurrentInputConnection()`, provides `commitText()`, `deleteSurroundingText()`, `sendKeyEvent()` (§6.1.3). | ✅ | `service/InputConnectionManager.kt` |
 | 3.3 | Implement `ModifierState.kt` — thread-safe `StateFlow<Set<Modifier>>` singleton (§9.4). | ✅ | `input/ModifierState.kt` |
-| 3.4 | Implement `KeyActionHandler.kt` — `onKey(keyData)` dispatch routing to backspace, shift, tab, escape, modifier, and character commit logic (§6.1.3, §6.1.4). | 🟡 | `input/KeyActionHandler.kt` |
+| 3.4 | Implement `KeyActionHandler.kt` — `onKey(keyData)` dispatch routing to backspace, shift, tab, escape, modifier, and character commit logic (§6.1.3, §6.1.4). | ✅ | `input/KeyActionHandler.kt` |
 | 3.5 | Implement `WordComposer.kt` — accumulates key codes, copy-on-write semantics (§9.3). | ✅ | `input/WordComposer.kt` |
 
 ### Acceptance Criteria
