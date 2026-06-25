@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- §4.4 / §6.1.5 — IME method declaration with en_US subtype -->
+<input-method xmlns:android="http://schemas.android.com/apk/res/android"
+    android:settingsActivity="io.github.modhack.activity.SettingsActivity"
+    android:icon="@mipmap/ic_launcher">
+
+    <!-- English (US) — QWERTY -->
+    <subtype
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/subtype_en_us"
+        android:imeSubtypeLocale="en_US"
+        android:imeSubtypeMode="keyboard"
+        android:imeSubtypeExtraValue="KeyboardLayoutSet=qwerty" />
+
+    <!-- English (UK) -->
+    <subtype
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/subtype_en_gb"
+        android:imeSubtypeLocale="en_GB"
+        android:imeSubtypeMode="keyboard"
+        android:imeSubtypeExtraValue="KeyboardLayoutSet=qwerty" />
+
+    <!-- Spanish -->
+    <subtype
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/subtype_es"
+        android:imeSubtypeLocale="es"
+        android:imeSubtypeMode="keyboard"
+        android:imeSubtypeExtraValue="KeyboardLayoutSet=qwerty" />
+
+    <!-- French -->
+    <subtype
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/subtype_fr"
+        android:imeSubtypeLocale="fr"
+        android:imeSubtypeMode="keyboard"
+        android:imeSubtypeExtraValue="KeyboardLayoutSet=azerty" />
+
+    <!-- German -->
+    <subtype
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/subtype_de"
+        android:imeSubtypeLocale="de"
+        android:imeSubtypeMode="keyboard"
+        android:imeSubtypeExtraValue="KeyboardLayoutSet=qwertz" />
+
+    <!-- Russian -->
+    <subtype
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/subtype_ru"
+        android:imeSubtypeLocale="ru"
+        android:imeSubtypeMode="keyboard"
+        android:imeSubtypeExtraValue="KeyboardLayoutSet=russian" />
+
+    <!-- Arabic -->
+    <subtype
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/subtype_ar"
+        android:imeSubtypeLocale="ar"
+        android:imeSubtypeMode="keyboard"
+        android:imeSubtypeExtraValue="KeyboardLayoutSet=arabic" />
+
+    <!-- Hebrew -->
+    <subtype
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/subtype_he"
+        android:imeSubtypeLocale="he"
+        android:imeSubtypeMode="keyboard"
+        android:imeSubtypeExtraValue="KeyboardLayoutSet=hebrew" />
+
+</input-method>

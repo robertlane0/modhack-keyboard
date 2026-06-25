@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:keyWidth="10%p"
+    app:keyHeight="10%p">
+    <Row>
+        <Key app:codes="q" app:label="q" app:shiftLabel="Q" />
+        <Key app:codes="w" app:label="w" app:shiftLabel="W" />
+        <Key app:codes="e" app:label="e" app:shiftLabel="E" />
+        <Key app:codes="r" app:label="r" app:shiftLabel="R" />
+        <Key app:codes="t" app:label="t" app:shiftLabel="T" />
+        <Key app:codes="y" app:label="y" app:shiftLabel="Y" />
+        <Key app:codes="u" app:label="u" app:shiftLabel="U" />
+        <Key app:codes="i" app:label="i" app:shiftLabel="I" />
+        <Key app:codes="o" app:label="o" app:shiftLabel="O" />
+        <Key app:codes="p" app:label="p" app:shiftLabel="P" />
+    </Row>
+    <Row>
+        <Key app:codes="a" app:label="a" app:shiftLabel="A" />
+        <Key app:codes="s" app:label="s" app:shiftLabel="S" />
+        <Key app:codes="d" app:label="d" app:shiftLabel="D" />
+        <Key app:codes="f" app:label="f" app:shiftLabel="F" />
+        <Key app:codes="g" app:label="g" app:shiftLabel="G" />
+        <Key app:codes="h" app:label="h" app:shiftLabel="H" />
+        <Key app:codes="j" app:label="j" app:shiftLabel="J" />
+        <Key app:codes="k" app:label="k" app:shiftLabel="K" />
+        <Key app:codes="l" app:label="l" app:shiftLabel="L" />
+    </Row>
+    <Row>
+        <Key app:codes="-1" app:label="Shift" app:isModifier="true" app:keyWidth="15%p" />
+        <Key app:codes="z" app:label="z" app:shiftLabel="Z" />
+        <Key app:codes="x" app:label="x" app:shiftLabel="X" />
+        <Key app:codes="c" app:label="c" app:shiftLabel="C" />
+        <Key app:codes="v" app:label="v" app:shiftLabel="V" />
+        <Key app:codes="b" app:label="b" app:shiftLabel="B" />
+        <Key app:codes="n" app:label="n" app:shiftLabel="N" />
+        <Key app:codes="m" app:label="m" app:shiftLabel="M" />
+        <Key app:codes="-5" app:label="Del" app:isRepeatable="true" app:keyWidth="15%p" />
+    </Row>
+    <Row>
+        <Key app:codes="-2" app:label="@string/label_symbols" app:keyWidth="15%p" />
+        <Key app:codes="-104" app:label="Globe" app:keyWidth="10%p" />
+        <Key app:codes="32" app:label="" app:keyWidth="50%p" />
+        <Key app:codes="46" app:label="." app:keyWidth="10%p" />
+        <Key app:codes="10" app:label="Enter" app:keyWidth="15%p" />
+    </Row>
+</Keyboard>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108"
+    android:tint="#FFFFFF">
+    <!-- Keyboard icon: a rounded rectangle with three rows of key squares -->
+    <group
+        android:translateX="22"
+        android:translateY="30">
+        <!-- Outer keyboard body -->
+        <path
+            android:fillColor="#1976D2"
+            android:pathData="M0,4C0,1.79 1.79,0 4,0L60,0C62.21,0 64,1.79 64,4L64,44C64,46.21 62.21,48 60,48L4,48C1.79,48 0,46.21 0,44Z" />
+        <!-- Row 1 keys -->
+        <path
+            android:fillColor="#BBDEFB"
+            android:pathData="M5,5h8v8h-8z M17,5h8v8h-8z M29,5h8v8h-8z M41,5h8v8h-8z M53,5h6v8h-6z" />
+        <!-- Row 2 keys -->
+        <path
+            android:fillColor="#BBDEFB"
+            android:pathData="M5,17h8v8h-8z M17,17h8v8h-8z M29,17h8v8h-8z M41,17h8v8h-8z M53,17h6v8h-6z" />
+        <!-- Row 3 spacebar -->
+        <path
+            android:fillColor="#BBDEFB"
+            android:pathData="M5,29h10v8h-10z M19,29h26v8h-26z M49,29h10v8h-10z" />
+    </group>
+</vector>

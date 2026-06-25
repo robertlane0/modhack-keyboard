@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Keyboard">
+        <attr name="keyWidth" format="dimension|fraction" />
+        <attr name="keyHeight" format="dimension|fraction" />
+        <attr name="horizontalGap" format="dimension|fraction" />
+        <attr name="verticalGap" format="dimension|fraction" />
+    </declare-styleable>
+
+    <declare-styleable name="Row">
+        <attr name="keyWidth" />
+        <attr name="keyHeight" />
+        <attr name="rowEdgeFlags">
+            <flag name="top" value="4" />
+            <flag name="bottom" value="8" />
+        </attr>
+        <attr name="mode" format="integer" />
+        <attr name="isExtension" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="Key">
+        <attr name="codes" format="string" />
+        <attr name="keyWidth" />
+        <attr name="keyHeight" />
+        <attr name="label" format="string" />
+        <attr name="shiftLabel" format="string" />
+        <attr name="hint" format="string" />
+        <attr name="altHint" format="string" />
+        <attr name="iconSrc" format="reference" />
+        <attr name="isModifier" format="boolean" />
+        <attr name="isRepeatable" format="boolean" />
+        <attr name="isCursor" format="boolean" />
+        <attr name="popupKeys" format="string" />
+        <attr name="keyEdgeFlags">
+            <flag name="left" value="1" />
+            <flag name="right" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>

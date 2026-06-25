@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">ModHack Keyboard</string>
+    <string name="settings_title">ModHack Settings</string>
+
+    <!-- Setup wizard -->
+    <string name="setup_title">Set Up ModHack Keyboard</string>
+    <string name="setup_step1_title">Enable ModHack</string>
+    <string name="setup_step1_desc">Open system settings and enable ModHack Keyboard as an input method.</string>
+    <string name="setup_step2_title">Select ModHack</string>
+    <string name="setup_step2_desc">Switch your current keyboard to ModHack Keyboard.</string>
+    <string name="setup_step3_title">Choose Languages</string>
+    <string name="setup_step3_desc">Select which language subtypes to enable.</string>
+    <string name="setup_complete">Setup complete! You can now use ModHack Keyboard.</string>
+    <string name="btn_enable_ime">Enable in Settings</string>
+    <string name="btn_select_ime">Select Keyboard</string>
+    <string name="btn_open_settings">Open Settings</string>
+
+    <!-- Subtypes -->
+    <string name="subtype_en_us">English (US)</string>
+    <string name="subtype_en_gb">English (UK)</string>
+    <string name="subtype_es">Spanish</string>
+    <string name="subtype_fr">French</string>
+    <string name="subtype_de">German</string>
+    <string name="subtype_ru">Russian</string>
+    <string name="subtype_ar">Arabic</string>
+    <string name="subtype_he">Hebrew</string>
+
+    <!-- Settings sections -->
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_layout">Layout</string>
+    <string name="settings_behavior">Behavior</string>
+    <string name="settings_input">Input</string>
+    <string name="settings_feedback">Feedback</string>
+    <string name="settings_text_correction">Text Correction</string>
+
+    <!-- Appearance settings -->
+    <string name="pref_theme">Theme</string>
+    <string name="pref_label_scale">Key Label Scale</string>
+    <string name="theme_material_you">Material You</string>
+    <string name="theme_material_dark">Material Dark</string>
+    <string name="theme_material_light">Material Light</string>
+    <string name="theme_amoled_black">AMOLED Black</string>
+    <string name="theme_neon_tribute">Neon Tribute</string>
+    <string name="theme_ics_tribute">ICS Tribute</string>
+
+    <!-- Layout settings -->
+    <string name="pref_mode_portrait">Portrait Layout</string>
+    <string name="pref_mode_landscape">Landscape Layout</string>
+    <string name="pref_height_portrait">Keyboard Height (Portrait)</string>
+    <string name="pref_height_landscape">Keyboard Height (Landscape)</string>
+    <string name="layout_qwerty">4-Row QWERTY</string>
+    <string name="layout_full">5-Row Full (F-keys)</string>
+    <string name="layout_full_fn">5-Row Full (Fn-keys)</string>
+    <string name="layout_compact">Compact</string>
+
+    <!-- Behavior settings -->
+    <string name="pref_auto_cap">Auto-capitalize</string>
+    <string name="pref_shift_lock">Shift Lock Modifiers</string>
+    <string name="pref_shift_lock_summary">Shift lock also locks Ctrl/Alt/Meta</string>
+    <string name="pref_slide_keys">Slide Keys</string>
+    <string name="pref_connectbot_tab">ConnectBot Tab Hack</string>
+    <string name="pref_connectbot_tab_summary">Send Ctrl+I instead of Tab</string>
+
+    <!-- Input settings -->
+    <string name="pref_swipe_up">Swipe Up Action</string>
+    <string name="pref_swipe_down">Swipe Down Action</string>
+    <string name="pref_long_press_duration">Long Press Duration</string>
+    <string name="swipe_action_none">None</string>
+    <string name="swipe_action_hide">Hide Keyboard</string>
+    <string name="swipe_action_next_lang">Next Language</string>
+
+    <!-- Feedback settings -->
+    <string name="pref_vibrate">Haptic Feedback</string>
+    <string name="pref_vibrate_len">Vibration Duration</string>
+    <string name="pref_sound">Sound on Keypress</string>
+    <string name="pref_popup">Key Preview Popup</string>
+
+    <!-- Text correction settings -->
+    <string name="pref_quick_fixes">Quick Fixes</string>
+    <string name="pref_auto_complete">Auto-complete</string>
+    <string name="pref_recorrection">Recorrection</string>
+
+    <!-- Key labels -->
+    <string name="label_tab">Tab</string>
+    <string name="label_enter">Enter</string>
+    <string name="label_space">Space</string>
+    <string name="label_shift">Shift</string>
+    <string name="label_ctrl">Ctrl</string>
+    <string name="label_alt">Alt</string>
+    <string name="label_meta">Meta</string>
+    <string name="label_fn">Fn</string>
+    <string name="label_esc">Esc</string>
+    <string name="label_symbols">\?123</string>
+    <string name="label_abc">ABC</string>
+
+    <!-- Candidate strip -->
+    <string name="remove_from_dictionary">Remove \"%s\" from dictionary</string>
+    <string name="word_added">Word added to dictionary</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Keyboard Status</string>
+    <string name="notification_channel_desc">Persistent notification for keyboard switching</string>
+    <string name="notification_title">ModHack Keyboard Active</string>
+    <string name="notification_tap_to_settings">Tap to open settings</string>
+</resources>

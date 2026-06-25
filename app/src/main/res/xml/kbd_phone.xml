@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:keyWidth="33.3%p"
+    app:keyHeight="15%p">
+    <Row>
+        <Key app:codes="49" app:label="1" />
+        <Key app:codes="50" app:label="2" />
+        <Key app:codes="51" app:label="3" />
+    </Row>
+    <Row>
+        <Key app:codes="52" app:label="4" />
+        <Key app:codes="53" app:label="5" />
+        <Key app:codes="54" app:label="6" />
+    </Row>
+    <Row>
+        <Key app:codes="55" app:label="7" />
+        <Key app:codes="56" app:label="8" />
+        <Key app:codes="57" app:label="9" />
+    </Row>
+    <Row>
+        <Key app:codes="42" app:label="*" />
+        <Key app:codes="48" app:label="0" />
+        <Key app:codes="35" app:label="#" />
+    </Row>
+    <Row>
+        <Key app:codes="-2" app:label="ABC" app:keyWidth="33.3%p" />
+        <Key app:codes="-5" app:label="Del" app:isRepeatable="true" app:keyWidth="33.3%p" />
+        <Key app:codes="10" app:label="Enter" app:keyWidth="33.4%p" />
+    </Row>
+</Keyboard>
