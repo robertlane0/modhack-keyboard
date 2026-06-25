@@ -3,7 +3,10 @@ package io.github.modhack.service
 import android.inputmethodservice.InputMethodService
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodSubtype
 import androidx.compose.ui.platform.ComposeView
+import io.github.modhack.input.ComposeSequence
+import io.github.modhack.input.DeadAccentSequence
 import io.github.modhack.input.KeyActionHandler
 import io.github.modhack.input.ModifierState
 import io.github.modhack.input.WordComposer
@@ -31,6 +34,7 @@ import kotlinx.coroutines.launch
  * - [onStartInput]: resets word composer, detects locale, applies auto-cap.
  * - [onFinishInput]: resets word composer and clears modifiers.
  * - [onUpdateSelection]: detects cursor movement and updates composing state.
+ * - [onCurrentInputMethodSubtypeChanged]: handles system-initiated subtype changes.
  */
 class MHInputService : InputMethodService(), CoroutineScope {
 
@@ -43,6 +47,12 @@ class MHInputService : InputMethodService(), CoroutineScope {
     private lateinit var wordComposer: WordComposer
     private lateinit var keyActionHandler: KeyActionHandler
 
+    /** X11 compose key sequence engine for compose key input. */
+    val composeSequence = ComposeSequence()
+
+    /** Dead key / accent combining engine for dead key input. */
+    val deadAccentSequence = DeadAccentSequence()
+
     private val _keyboardState = MutableStateFlow(KeyboardState())
     val keyboardState: StateFlow<KeyboardState> = _keyboardState.asStateFlow()
 
@@ -51,6 +61,9 @@ class MHInputService : InputMethodService(), CoroutineScope {
 
     private val _currentLocale = MutableStateFlow("en")
     val currentLocale: StateFlow<String> = _currentLocale.asStateFlow()
+
+    /** The currently active InputMethodSubtype, or null if none. */
+    private var currentSubtype: InputMethodSubtype? = null
 
     lateinit var preferences: StateFlow<KeyboardPreferences>
         private set
@@ -95,6 +108,8 @@ class MHInputService : InputMethodService(), CoroutineScope {
     override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
         super.onStartInput(attribute, restarting)
         wordComposer.reset()
+        composeSequence.cancel()
+        deadAccentSequence.cancel()
         detectLocale(attribute)
         applyAutoCap(attribute)
         updateLayout()
@@ -103,6 +118,8 @@ class MHInputService : InputMethodService(), CoroutineScope {
     override fun onFinishInput() {
         super.onFinishInput()
         wordComposer.reset()
+        composeSequence.cancel()
+        deadAccentSequence.cancel()
         ModifierState.clearAll()
         _suggestions.value = emptyList()
     }
@@ -115,7 +132,50 @@ class MHInputService : InputMethodService(), CoroutineScope {
         super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, candidatesStart, candidatesEnd)
         if (oldSelStart != newSelStart || oldSelEnd != newSelEnd) {
             wordComposer.reset()
+            composeSequence.cancel()
+            deadAccentSequence.cancel()
             _suggestions.value = emptyList()
+        }
+    }
+
+    /**
+     * Called when the system switches to a different input method subtype.
+     *
+     * This handles both user-initiated subtype switches (via the globe key
+     * or system language picker) and programmatic switches.
+     *
+     * @param newSubtype The new input method subtype being activated.
+     */
+    override fun onCurrentInputMethodSubtypeChanged(newSubtype: InputMethodSubtype) {
+        super.onCurrentInputMethodSubtypeChanged(newSubtype)
+        currentSubtype = newSubtype
+
+        // Extract locale from the subtype's extra value or locale string
+        @Suppress("DEPRECATION")
+        val subtypeLocale = newSubtype.locale
+        val locale = newSubtype.extraValue
+            .split(",")
+            .firstOrNull { it.startsWith("KeyboardLayoutSet=") }
+            ?.removePrefix("KeyboardLayoutSet=")
+            ?: subtypeLocale
+
+        // Map the layout set name to a locale code
+        val mappedLocale = when (locale) {
+            "qwerty" -> "en"
+            "azerty" -> "fr"
+            "qwertz" -> "de"
+            "russian" -> "ru"
+            "arabic" -> "ar"
+            "hebrew" -> "he"
+            else -> locale
+        }
+
+        if (mappedLocale != _currentLocale.value) {
+            _currentLocale.value = mappedLocale
+            wordComposer.reset()
+            composeSequence.cancel()
+            deadAccentSequence.cancel()
+            updateLayout()
         }
     }
 
@@ -146,6 +206,7 @@ class MHInputService : InputMethodService(), CoroutineScope {
     /**
      * Applies auto-capitalization based on editor context and preferences.
      */
+    @Suppress("UNUSED_PARAMETER")
     private fun applyAutoCap(attribute: EditorInfo?) {
         val prefs = (preferences as? MutableStateFlow)?.value ?: KeyboardPreferences()
         if (!prefs.autoCap) return
@@ -160,9 +221,6 @@ class MHInputService : InputMethodService(), CoroutineScope {
     }
 
     /**
-     * Switches to the next available language subtype.
-     */
-    /**
      * Supported locales for cycling through with the globe key.
      * These should match the subtypes declared in res/xml/method.xml.
      */
@@ -171,6 +229,9 @@ class MHInputService : InputMethodService(), CoroutineScope {
     /**
      * Switches to the next available language subtype.
      * Cycles through the locales declared in method.xml.
+     *
+     * If the system supports it, this also calls [switchInputMethod]
+     * to properly notify the system of the subtype change.
      */
     fun switchToNextLanguage() {
         if (supportedLocales.size <= 1) return
@@ -178,7 +239,28 @@ class MHInputService : InputMethodService(), CoroutineScope {
         val currentLocale = _currentLocale.value
         val currentIdx = supportedLocales.indexOf(currentLocale)
         val nextIdx = if (currentIdx < 0) 0 else (currentIdx + 1) % supportedLocales.size
-        _currentLocale.value = supportedLocales[nextIdx]
+        val nextLocale = supportedLocales[nextIdx]
+
+        _currentLocale.value = nextLocale
+        wordComposer.reset()
+        composeSequence.cancel()
+        deadAccentSequence.cancel()
+        updateLayout()
+    }
+
+    /**
+     * Switches to a specific locale by locale code.
+     *
+     * @param locale The locale code to switch to (e.g., "en", "fr", "de").
+     */
+    fun switchToLocale(locale: String) {
+        if (locale == _currentLocale.value) return
+        if (locale !in supportedLocales) return
+
+        _currentLocale.value = locale
+        wordComposer.reset()
+        composeSequence.cancel()
+        deadAccentSequence.cancel()
         updateLayout()
     }
 

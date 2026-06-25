@@ -155,7 +155,7 @@ object KeyCodes {
     /**
      * Returns `true` if [code] is a function key (F1–F12).
      */
-    fun isFunctionKey(code: Int): Boolean = code in FUNC_F1..FUNC_F12
+    fun isFunctionKey(code: Int): Boolean = code in FUNC_F12..FUNC_F1
 
     /**
      * Maps an internal negative navigation code to its corresponding

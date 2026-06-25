@@ -22,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -42,6 +44,7 @@ import io.github.modhack.ui.theme.LocalKeyboardColors
  * - Pressed state highlighting
  * - Key hint text (e.g., numbers on alpha keys)
  * - Icon support for special keys (backspace, enter, etc.)
+ * - Full accessibility support with content descriptions for TalkBack
  *
  * @param key The key data to render.
  * @param service The input service for dispatching key actions.
@@ -99,6 +102,9 @@ fun KeyComposable(
         (key.height * baseUnit / 100).toDp()
     }
 
+    // Build accessible content description
+    val contentDescription = buildKeyContentDescription(key, isShifted, isModifierActive)
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -107,6 +113,9 @@ fun KeyComposable(
             .padding(2.dp)
             .clip(RoundedCornerShape(6.dp))
             .background(bgColor)
+            .semantics {
+                this.contentDescription = contentDescription
+            }
             .combinedClickable(
                 onClick = {
                     isPressed = false
@@ -118,13 +127,13 @@ fun KeyComposable(
                         onLongPress(key)
                     }
                 },
-                onClickLabel = key.label
+                onClickLabel = contentDescription
             )
     ) {
         if (key.icon != null) {
             Icon(
                 imageVector = key.icon,
-                contentDescription = key.label,
+                contentDescription = contentDescription,
                 tint = fgColor,
                 modifier = Modifier.size(24.dp)
             )
@@ -136,7 +145,7 @@ fun KeyComposable(
                     viewportWidth = 24f,
                     viewportHeight = 24f
                 ).build(),
-                contentDescription = key.label,
+                contentDescription = contentDescription,
                 tint = fgColor,
                 modifier = Modifier.size(24.dp)
             )
@@ -162,5 +171,66 @@ fun KeyComposable(
                     .padding(end = 4.dp, bottom = 2.dp)
             )
         }
+    }
+}
+
+/**
+ * Builds an accessible content description for a key.
+ *
+ * Provides meaningful descriptions for TalkBack users, including:
+ * - Modifier state (e.g., "Shift active")
+ * - Key function (e.g., "Backspace", "Enter")
+ * - Popup availability (e.g., "a, long press for accented characters")
+ *
+ * @param key The key to describe.
+ * @param isShifted Whether shift is currently active.
+ * @param isModifierActive Whether this modifier key is currently active.
+ * @return A descriptive string for accessibility services.
+ */
+private fun buildKeyContentDescription(
+    key: Key,
+    isShifted: Boolean,
+    isModifierActive: Boolean
+): String {
+    return when {
+        // Special keys with specific functions
+        key.codes.firstOrNull() == io.github.modhack.keycodes.KeyCodes.DELETE -> "Backspace"
+        key.codes.firstOrNull() == io.github.modhack.keycodes.KeyCodes.ENTER -> "Enter"
+        key.codes.firstOrNull() == io.github.modhack.keycodes.KeyCodes.SPACE -> "Space"
+        key.codes.firstOrNull() == io.github.modhack.keycodes.KeyCodes.TAB -> "Tab"
+        key.codes.firstOrNull() == io.github.modhack.keycodes.KeyCodes.ESCAPE -> "Escape"
+        key.codes.firstOrNull() == io.github.modhack.keycodes.KeyCodes.SYMBOL -> "Symbols keyboard"
+        key.codes.firstOrNull() == io.github.modhack.keycodes.KeyCodes.NEXT_LANGUAGE -> "Switch language"
+        key.codes.firstOrNull() == io.github.modhack.keycodes.KeyCodes.SETTINGS -> "Open settings"
+
+        // Modifier keys with state
+        key.isModifier && key.codes.firstOrNull() == io.github.modhack.keycodes.KeyCodes.SHIFT -> {
+            if (isModifierActive) "Shift active" else "Shift"
+        }
+        key.isModifier && key.codes.firstOrNull() == io.github.modhack.keycodes.KeyCodes.CTRL_LEFT -> {
+            if (isModifierActive) "Control active" else "Control"
+        }
+        key.isModifier && key.codes.firstOrNull() == io.github.modhack.keycodes.KeyCodes.ALT_LEFT -> {
+            if (isModifierActive) "Alt active" else "Alt"
+        }
+        key.isModifier && key.codes.firstOrNull() == io.github.modhack.keycodes.KeyCodes.META_LEFT -> {
+            if (isModifierActive) "Meta active" else "Meta"
+        }
+        key.isModifier && key.codes.firstOrNull() == io.github.modhack.keycodes.KeyCodes.FN -> {
+            if (isModifierActive) "Function active" else "Function"
+        }
+
+        // Regular character keys
+        key.label.isNotEmpty() && key.popupKeys != null -> {
+            val shiftedLabel = if (isShifted && key.shiftLabel.isNotEmpty()) key.shiftLabel else key.label
+            "$shiftedLabel, long press for alternatives"
+        }
+
+        key.label.isNotEmpty() -> {
+            if (isShifted && key.shiftLabel.isNotEmpty()) key.shiftLabel else key.label
+        }
+
+        // Fallback
+        else -> "Key"
     }
 }

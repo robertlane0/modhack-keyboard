@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Russian (ru) ЙЦУКЕН layout -->
+<Keyboard xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:keyWidth="10%p"
+    app:keyHeight="10%p">
+    <Row>
+        <Key app:codes="\u0439" app:label="\u0439" app:shiftLabel="\u0419" />
+        <Key app:codes="\u0446" app:label="\u0446" app:shiftLabel="\u0426" />
+        <Key app:codes="\u0443" app:label="\u0443" app:shiftLabel="\u0423" />
+        <Key app:codes="\u043a" app:label="\u043a" app:shiftLabel="\u041a" />
+        <Key app:codes="\u0435" app:label="\u0435" app:shiftLabel="\u0415" />
+        <Key app:codes="\u043d" app:label="\u043d" app:shiftLabel="\u041d" />
+        <Key app:codes="\u0433" app:label="\u0433" app:shiftLabel="\u0413" />
+        <Key app:codes="\u0448" app:label="\u0448" app:shiftLabel="\u0428" />
+        <Key app:codes="\u0449" app:label="\u0449" app:shiftLabel="\u0429" />
+        <Key app:codes="\u0437" app:label="\u0437" app:shiftLabel="\u0417" />
+    </Row>
+    <Row>
+        <Key app:codes="\u0444" app:label="\u0444" app:shiftLabel="\u0424" />
+        <Key app:codes="\u044b" app:label="\u044b" app:shiftLabel="\u042b" />
+        <Key app:codes="\u0432" app:label="\u0432" app:shiftLabel="\u0412" />
+        <Key app:codes="\u0430" app:label="\u0430" app:shiftLabel="\u0410" />
+        <Key app:codes="\u043f" app:label="\u043f" app:shiftLabel="\u041f" />
+        <Key app:codes="\u0440" app:label="\u0440" app:shiftLabel="\u0420" />
+        <Key app:codes="\u043e" app:label="\u043e" app:shiftLabel="\u041e" />
+        <Key app:codes="\u043b" app:label="\u043b" app:shiftLabel="\u041b" />
+        <Key app:codes="\u0434" app:label="\u0434" app:shiftLabel="\u0414" />
+    </Row>
+    <Row>
+        <Key app:codes="-1" app:label="Shift" app:isModifier="true" app:keyWidth="15%p" />
+        <Key app:codes="\u044f" app:label="\u044f" app:shiftLabel="\u042f" />
+        <Key app:codes="\u0447" app:label="\u0447" app:shiftLabel="\u0427" />
+        <Key app:codes="\u0441" app:label="\u0441" app:shiftLabel="\u0421" />
+        <Key app:codes="\u043c" app:label="\u043c" app:shiftLabel="\u041c" />
+        <Key app:codes="\u0438" app:label="\u0438" app:shiftLabel="\u0418" />
+        <Key app:codes="\u0442" app:label="\u0442" app:shiftLabel="\u0422" />
+        <Key app:codes="\u044c" app:label="\u044c" app:shiftLabel="\u042c" />
+        <Key app:codes="-5" app:label="Del" app:isRepeatable="true" app:keyWidth="15%p" />
+    </Row>
+    <Row>
+        <Key app:codes="-2" app:label="@string/label_symbols" app:keyWidth="15%p" />
+        <Key app:codes="-104" app:label="Globe" app:keyWidth="10%p" />
+        <Key app:codes="32" app:label="" app:keyWidth="50%p" />
+        <Key app:codes="46" app:label="." app:keyWidth="10%p" />
+        <Key app:codes="10" app:label="Enter" app:keyWidth="15%p" />
+    </Row>
+</Keyboard>

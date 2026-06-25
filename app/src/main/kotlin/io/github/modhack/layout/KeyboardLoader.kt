@@ -33,8 +33,6 @@ class KeyboardLoader(private val context: Context) {
     private fun parseKeyboard(parser: XmlResourceParser, id: String, keyboardMode: Int): KeyboardLayout {
         val rows = mutableListOf<Row>()
         var eventType = parser.eventType
-        var kbWidth = 0
-        var kbHeight = 0
 
         var defaultWidth = 10
         var defaultHeight = 10

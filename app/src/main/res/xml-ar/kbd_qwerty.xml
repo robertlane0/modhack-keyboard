@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Arabic (ar) layout -->
+<Keyboard xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:keyWidth="10%p"
+    app:keyHeight="10%p">
+    <Row>
+        <Key app:codes="u064a" app:label="\u064a" app:shiftLabel="\u064a\u064e" />
+        <Key app:codes="u0644" app:label="\u0644" app:shiftLabel="\u0644\u064e" />
+        <Key app:codes="u0624" app:label="\u0624" app:shiftLabel="\u0624\u064e" />
+        <Key app:codes="u0627" app:label="\u0627" app:shiftLabel="\u0627\u064e" />
+        <Key app:codes="u062a" app:label="\u062a" app:shiftLabel="\u062a\u064e" />
+        <Key app:codes="u0646" app:label="\u0646" app:shiftLabel="\u0646\u064e" />
+        <Key app:codes="u0645" app:label="\u0645" app:shiftLabel="\u0645\u064e" />
+        <Key app:codes="u0643" app:label="\u0643" app:shiftLabel="\u0643\u064e" />
+        <Key app:codes="u0648" app:label="\u0648" app:shiftLabel="\u0648\u064e" />
+    </Row>
+    <Row>
+        <Key app:codes="u0641" app:label="\u0641" app:shiftLabel="\u0641\u064e" />
+        <Key app:codes="u0635" app:label="\u0635" app:shiftLabel="\u0635\u064e" />
+        <Key app:codes="u062d" app:label="\u062d" app:shiftLabel="\u062d\u064e" />
+        <Key app:codes="u064a" app:label="\u064a" app:shiftLabel="\u064a\u064e" />
+        <Key app:codes="u0633" app:label="\u0633" app:shiftLabel="\u0633\u064e" />
+        <Key app:codes="u0628" app:label="\u0628" app:shiftLabel="\u0628\u064e" />
+        <Key app:codes="u0644" app:label="\u0644" app:shiftLabel="\u0644\u064e" />
+        <Key app:codes="u0627" app:label="\u0627" app:shiftLabel="\u0627\u064e" />
+    </Row>
+    <Row>
+        <Key app:codes="-1" app:label="Shift" app:isModifier="true" app:keyWidth="15%p" />
+        <Key app:codes="u0636" app:label="\u0636" app:shiftLabel="\u0636\u064e" />
+        <Key app:codes="u0638" app:label="\u0638" app:shiftLabel="\u0638\u064e" />
+        <Key app:codes="u063a" app:label="\u063a" app:shiftLabel="\u063a\u064e" />
+        <Key app:codes="u0639" app:label="\u0639" app:shiftLabel="\u0639\u064e" />
+        <Key app:codes="u062e" app:label="\u062e" app:shiftLabel="\u062e\u064e" />
+        <Key app:codes="u0630" app:label="\u0630" app:shiftLabel="\u0630\u064e" />
+        <Key app:codes="u062c" app:label="\u062c" app:shiftLabel="\u062c\u064e" />
+        <Key app:codes="-5" app:label="Del" app:isRepeatable="true" app:keyWidth="15%p" />
+    </Row>
+    <Row>
+        <Key app:codes="-2" app:label="@string/label_symbols" app:keyWidth="15%p" />
+        <Key app:codes="-104" app:label="Globe" app:keyWidth="10%p" />
+        <Key app:codes="32" app:label="" app:keyWidth="50%p" />
+        <Key app:codes="46" app:label="." app:keyWidth="10%p" />
+        <Key app:codes="10" app:label="Enter" app:keyWidth="15%p" />
+    </Row>
+</Keyboard>

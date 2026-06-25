@@ -1,9 +1,15 @@
 package io.github.modhack.ui
 
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,6 +29,9 @@ import io.github.modhack.ui.theme.LocalKeyboardColors
  * Renders the candidate strip at the top, followed by each row
  * of keys from the currently loaded [KeyboardLayout]. Handles
  * swipe gestures for hiding the keyboard and switching languages.
+ *
+ * Properly handles window insets for edge-to-edge display on
+ * modern Android devices (API 30+).
  *
  * @param service The input method service providing state and key dispatch.
  */
@@ -48,6 +57,8 @@ fun KeyboardUI(service: MHInputService) {
         modifier = Modifier
             .fillMaxWidth()
             .background(colors.keyboardBackground)
+            // Handle navigation bar insets for edge-to-edge display
+            .windowInsetsPadding(WindowInsets.navigationBars)
             .pointerInput(Unit) {
                 detectDragGestures(
                     onDragEnd = {},

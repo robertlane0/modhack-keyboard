@@ -29,7 +29,7 @@ import io.github.modhack.ui.theme.LocalKeyboardColors
 fun PopupComposable(
     keyLabel: String,
     popupKeys: List<String>? = null,
-    onPopupKeySelected: (String) -> Unit = {}
+    @Suppress("UNUSED_PARAMETER") onPopupKeySelected: (String) -> Unit = {}
 ) {
     val colors = LocalKeyboardColors.current
 
