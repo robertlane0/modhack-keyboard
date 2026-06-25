@@ -131,6 +131,7 @@ private fun CandidateWord(
 /**
  * Simple overlay shown when long-pressing a candidate word.
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun DeleteConfirmationOverlay(
     suggestion: Suggestion,

@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.modhack.model.Key
-import io.github.modhack.model.Modifier
+import io.github.modhack.model.Modifier as ModelModifier
 import io.github.modhack.model.ShiftState
 import io.github.modhack.service.MHInputService
 import io.github.modhack.ui.theme.LocalKeyboardColors
@@ -72,7 +73,7 @@ fun KeyComposable(
         else -> key.label
     }
 
-    val isModifierActive = key.isModifier && Modifier.fromKeyCode(key.codes.firstOrNull() ?: 0)
+    val isModifierActive = key.isModifier && ModelModifier.fromKeyCode(key.codes.firstOrNull() ?: 0)
         ?.let { keyboardState.activeModifiers.contains(it) } == true
 
     val bgColor = when {
@@ -117,7 +118,7 @@ fun KeyComposable(
                         onLongPress(key)
                     }
                 },
-                onClickDescription = key.label
+                onClickLabel = key.label
             )
     ) {
         if (key.icon != null) {

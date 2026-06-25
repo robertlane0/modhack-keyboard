@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import io.github.modhack.input.GestureProcessor
 import io.github.modhack.service.MHInputService
 import io.github.modhack.ui.theme.LocalKeyboardColors
@@ -60,14 +61,14 @@ fun KeyboardUI(service: MHInputService) {
                             if (dy > 0) {
                                 // Swipe down
                                 when (swipeDownAction) {
-                                    GestureProcessor.SwipeAction.HIDE -> service.hideWindow(0)
+                                    GestureProcessor.SwipeAction.HIDE -> service.hideWindow()
                                     GestureProcessor.SwipeAction.NEXT_LANGUAGE -> service.switchToNextLanguage()
                                     GestureProcessor.SwipeAction.NONE -> {}
                                 }
                             } else {
                                 // Swipe up
                                 when (swipeUpAction) {
-                                    GestureProcessor.SwipeAction.HIDE -> service.hideWindow(0)
+                                    GestureProcessor.SwipeAction.HIDE -> service.hideWindow()
                                     GestureProcessor.SwipeAction.NEXT_LANGUAGE -> service.switchToNextLanguage()
                                     GestureProcessor.SwipeAction.NONE -> {}
                                 }

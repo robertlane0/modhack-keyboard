@@ -58,14 +58,12 @@ class PluginManager {
 
         val intent = Intent(ACTION_DICTIONARY_PLUGIN)
 
-        val resolveInfoFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            PackageManager.ResolveInfoFlags.of(PackageManager.GET_META_DATA.toLong())
+        val resolveInfos = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            pm.queryIntentServices(intent, PackageManager.ResolveInfoFlags.of(PackageManager.GET_META_DATA.toLong()))
         } else {
             @Suppress("DEPRECATION")
-            PackageManager.GET_META_DATA
+            pm.queryIntentServices(intent, PackageManager.GET_META_DATA)
         }
-
-        val resolveInfos = pm.queryIntentServices(intent, resolveInfoFlags)
 
         for (info in resolveInfos) {
             val serviceInfo = info.serviceInfo ?: continue
@@ -108,13 +106,12 @@ class PluginManager {
         return try {
             val pm = context.packageManager
             val intent = Intent(ACTION_DICTIONARY_PLUGIN).setPackage(packageName)
-            val resolveInfoFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                PackageManager.ResolveInfoFlags.of(0L)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                pm.queryIntentServices(intent, PackageManager.ResolveInfoFlags.of(0L))
             } else {
                 @Suppress("DEPRECATION")
-                0
-            }
-            pm.queryIntentServices(intent, resolveInfoFlags).isNotEmpty()
+                pm.queryIntentServices(intent, 0)
+            }.isNotEmpty()
         } catch (_: Exception) {
             false
         }
