@@ -8,6 +8,7 @@ package io.github.modhack.model
  * layers produce new [KeyboardState] instances, which flow down to the UI.
  *
  * @property layoutId Identifier of the currently active [KeyboardLayout].
+ * @property layout The currently loaded keyboard layout, or null if not yet loaded.
  * @property mode Current input mode (see [InputMode]).
  * @property shiftState Current shift state.
  * @property activeModifiers Set of currently pressed/locked modifiers.
@@ -16,6 +17,7 @@ package io.github.modhack.model
  */
 data class KeyboardState(
     val layoutId: String = "",
+    val layout: KeyboardLayout? = null,
     val mode: InputMode = InputMode.TEXT,
     val shiftState: ShiftState = ShiftState.OFF,
     val activeModifiers: Set<Modifier> = emptySet(),

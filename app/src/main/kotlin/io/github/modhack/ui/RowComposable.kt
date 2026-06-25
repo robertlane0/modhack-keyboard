@@ -1,26 +1,69 @@
 package io.github.modhack.ui
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import io.github.modhack.model.Key
 import io.github.modhack.model.Row
 import io.github.modhack.service.MHInputService
 
 /**
- * Renders a row of keys.
+ * Renders a row of keys within the keyboard.
+ *
+ * Each key in the row is rendered as a [KeyComposable] with proportional
+ * width based on the key's width in abstract units relative to the
+ * total row width.
+ *
+ * @param row The row data containing keys to render.
+ * @param service The input service for dispatching key actions.
+ * @param keyboardHeight Total keyboard height in dp for proportional sizing.
  */
 @Composable
-fun RowComposable(row: Row, service: MHInputService) {
-    // Stub implementation
-    Box(
-        modifier = Modifier.fillMaxWidth().height(50.dp),
-        contentAlignment = Alignment.Center
+fun RowComposable(
+    row: Row,
+    service: MHInputService,
+    keyboardHeight: Float = 200f
+) {
+    var popupKey by remember { mutableStateOf<Key?>(null) }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(with(LocalDensity.current) { (row.defaultHeight * keyboardHeight / 500f).dp }),
+        horizontalArrangement = Arrangement.Center
     ) {
-        Text("Row")
+        row.keys.forEach { key ->
+            KeyComposable(
+                key = key,
+                service = service,
+                keyboardHeight = keyboardHeight,
+                onLongPress = { popupKey = it }
+            )
+        }
+    }
+
+    popupKey?.let { key ->
+        PopupComposable(
+            keyLabel = key.shiftLabel.ifEmpty { key.label },
+            popupKeys = key.popupKeys,
+            onPopupKeySelected = { selected ->
+                popupKey = null
+                // Commit the selected popup character directly
+                selected.firstOrNull()?.let { char ->
+                    service.onKey(char.code)
+                }
+            }
+        )
     }
 }

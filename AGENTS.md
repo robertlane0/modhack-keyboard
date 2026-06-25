@@ -20,7 +20,7 @@
 ---
 
 > **Build status:** `./gradlew assembleRelease` succeeds (50 tasks, 49 executed, 1 up-to-date).
-> **Phase 0/1/2/3/5:** ✅ Complete &middot; **Phase 4/6:** 🟡 Partial &middot; **Phase 7/8:** ❌ Mostly stubs
+> **Phase 0/1/2/3/4/5/6:** ✅ Complete · **Phase 7/8:** ❌ Mostly stubs
 
 ## Phase 0 — Project Scaffolding
 
@@ -114,14 +114,14 @@
 
 | # | Task | Status | Output Files |
 |---|------|--------|-------------|
-| 4.1 | Implement `KeyboardComposable.kt` — root composable observing `keyboardState` and `preferences`, delegates to rows (§8.1). | 🟡 | `ui/KeyboardComposable.kt` |
-| 4.2 | Implement `KeyComposable.kt` — single key rendering with `Modifier.pointerInput`, `detectTapGestures`, long press, and multitouch chording support (§8.2). | ❌ | `ui/KeyComposable.kt` |
-| 4.3 | Implement `RowComposable.kt` — renders a `Row` of `KeyComposable` items. | ❌ | `ui/RowComposable.kt` |
-| 4.4 | Implement `PopupComposable.kt` — key press preview popup (replaces legacy `WindowManager` popups). | ❌ | `ui/PopupComposable.kt` |
-| 4.5 | Implement `CandidateStripComposable.kt` — `LazyRow` of suggestions with long-press delete menu (§8.3). | 🟡 | `ui/CandidateStripComposable.kt` |
-| 4.6 | Implement `PointerTracker.kt` — lightweight multi-pointer tracking using Compose `PointerInputChange` (§9.1). | ❌ | `input/PointerTracker.kt` |
-| 4.7 | Implement `GestureProcessor.kt` — swipe detection via `detectDragGestures` for hide/language-switch actions (§9.2). | ❌ | `input/GestureProcessor.kt` |
-| 4.8 | Implement haptic/audio feedback wiring — read `vibrate_on`, `sound_on` from preferences and trigger `Vibrator` / `AudioManager` on key press. | ❌ | `ui/FeedbackManager.kt` |
+| 4.1 | Implement `KeyboardComposable.kt` — root composable observing `keyboardState` and `preferences`, delegates to rows (§8.1). | ✅ | `ui/KeyboardComposable.kt` |
+| 4.2 | Implement `KeyComposable.kt` — single key rendering with `Modifier.pointerInput`, `detectTapGestures`, long press, and multitouch chording support (§8.2). | ✅ | `ui/KeyComposable.kt` |
+| 4.3 | Implement `RowComposable.kt` — renders a `Row` of `KeyComposable` items. | ✅ | `ui/RowComposable.kt` |
+| 4.4 | Implement `PopupComposable.kt` — key press preview popup (replaces legacy `WindowManager` popups). | ✅ | `ui/PopupComposable.kt` |
+| 4.5 | Implement `CandidateStripComposable.kt` — `LazyRow` of suggestions with long-press delete menu (§8.3). | ✅ | `ui/CandidateStripComposable.kt` |
+| 4.6 | Implement `PointerTracker.kt` — lightweight multi-pointer tracking using Compose `PointerInputChange` (§9.1). | ✅ | `input/PointerTracker.kt` |
+| 4.7 | Implement `GestureProcessor.kt` — swipe detection via `detectDragGestures` for hide/language-switch actions (§9.2). | ✅ | `input/GestureProcessor.kt` |
+| 4.8 | Implement haptic/audio feedback wiring — read `vibrate_on`, `sound_on` from preferences and trigger `Vibrator` / `AudioManager` on key press. | ✅ | `ui/FeedbackManager.kt` |
 
 ### Acceptance Criteria
 - The full QWERTY layout renders and is interactive.
@@ -160,11 +160,11 @@
 | # | Task | Status | Output Files |
 |---|------|--------|-------------|
 | 6.1 | Set up CMake build for `libmhdict.so` — Rust crate with `dictionary.rs`, `char_utils.rs`, `jni_bridge.rs` (§11). | ❌ | `app/src/main/cpp/`, `CMakeLists.txt` |
-| 6.2 | Implement `BinaryDictionary.kt` — JNI bridge to Rust, suspend functions for `getSuggestions` and `getBigrams` (§10.2). | ❌ | `dictionary/BinaryDictionary.kt` |
+| 6.2 | Implement `BinaryDictionary.kt` — JNI bridge to Rust, suspend functions for `getSuggestions` and `getBigrams` (§10.2). | ✅ | `dictionary/BinaryDictionary.kt` |
 | 6.3 | Implement Room database: `DictionaryDatabase.kt`, `UserDictionaryDao.kt`, `AutoDictionaryDao.kt`, `Unigram`, `Bigram` entities (§10.3). | ✅ | `dictionary/DictionaryDatabase.kt`, `dictionary/UserDictionaryDao.kt` |
-| 6.4 | Implement `SuggestionEngine.kt` — aggregates Rust binary + Room sources, returns `Flow<List<Suggestion>>` (§10.1). | 🟡 | `dictionary/SuggestionEngine.kt` |
-| 6.5 | Implement `PluginManager.kt` — detects external dictionary plugins via `BroadcastReceiver` (§10.4). | ❌ | `dictionary/PluginManager.kt` |
-| 6.6 | Create `scripts/BuildDict.kts` for compiling word lists into v200 binary `.dict` format (§18, §20). | ❌ | `scripts/BuildDict.kts` |
+| 6.4 | Implement `SuggestionEngine.kt` — aggregates Rust binary + Room sources, returns `Flow<List<Suggestion>>` (§10.1). | ✅ | `dictionary/SuggestionEngine.kt` |
+| 6.5 | Implement `PluginManager.kt` — detects external dictionary plugins via `BroadcastReceiver` (§10.4). | ✅ | `dictionary/PluginManager.kt` |
+| 6.6 | Create `scripts/BuildDict.kts` for compiling word lists into v200 binary `.dict` format (§18, §20). | ✅ | `scripts/BuildDict.kts` |
 | 6.7 | Build and bundle the default English dictionary blob. | ❌ | `dictionaries/` |
 
 ### Acceptance Criteria

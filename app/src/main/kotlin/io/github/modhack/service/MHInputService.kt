@@ -197,7 +197,7 @@ class MHInputService : InputMethodService(), CoroutineScope {
         
         launch {
             val layout = layoutCache.getLayout(mode, locale, resources.configuration.orientation, fullModeStr)
-            _keyboardState.value = _keyboardState.value.copy(layoutId = layout.id)
+            _keyboardState.value = _keyboardState.value.copy(layoutId = layout.id, layout = layout)
         }
     }
     
