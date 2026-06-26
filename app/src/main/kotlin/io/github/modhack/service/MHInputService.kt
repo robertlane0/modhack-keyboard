@@ -13,6 +13,7 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.setViewTreeLifecycleOwner
+import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
@@ -30,6 +31,7 @@ import io.github.modhack.prefs.KeyboardPreferences
 import io.github.modhack.prefs.PreferencesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -91,6 +93,9 @@ class MHInputService : InputMethodService(), CoroutineScope, LifecycleOwner, Vie
 
     private var cachedInputView: ComposeView? = null
 
+    /** Tracks the pending layout loading coroutine so stale results can be cancelled. */
+    private var layoutJob: Job? = null
+
     override fun onCreate() {
         super.onCreate()
         savedStateRegistryController.performRestore(null)
@@ -126,12 +131,7 @@ class MHInputService : InputMethodService(), CoroutineScope, LifecycleOwner, Vie
 
         composeView.setViewTreeLifecycleOwner(this)
         composeView.setViewTreeSavedStateRegistryOwner(this)
-
-        // ViewTreeViewModelStoreOwner lives in lifecycle-viewmodel but the Kotlin
-        // compiler cannot resolve it directly, so we invoke it via reflection.
-        Class.forName("androidx.lifecycle.ViewTreeViewModelStoreOwner")
-            .getMethod("set", View::class.java, ViewModelStoreOwner::class.java)
-            .invoke(null, composeView, this)
+        composeView.setViewTreeViewModelStoreOwner(this)
 
         composeView.setViewCompositionStrategy(
             androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool
@@ -319,8 +319,9 @@ class MHInputService : InputMethodService(), CoroutineScope, LifecycleOwner, Vie
         val isPortrait = resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
         val fullModeStr = if (isPortrait) prefs.modePortrait else prefs.modeLandscape
         val locale = _currentLocale.value
-        
-        launch {
+
+        layoutJob?.cancel()
+        layoutJob = launch {
             val layout = layoutCache.getLayout(mode, locale, resources.configuration.orientation, fullModeStr)
             _keyboardState.value = _keyboardState.value.copy(layoutId = layout.id, layout = layout)
         }

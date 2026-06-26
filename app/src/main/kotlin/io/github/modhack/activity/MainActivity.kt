@@ -36,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -90,16 +91,16 @@ fun SetupWizard(resumeTick: Int) {
     val context = LocalContext.current
     var currentStep by remember { mutableIntStateOf(1) }
 
-    // Re-evaluate on every resume (resumeTick changes when onResume fires)
-    val isImeEnabled = remember(resumeTick) { isModHackEnabled(context) }
-    val isImeSelected = remember(resumeTick) { isModHackSelected(context) }
-
-    if (isImeEnabled && isImeSelected) {
-        currentStep = 3
-    } else if (isImeEnabled) {
-        currentStep = 2
-    } else {
-        currentStep = 1
+    // Auto-advance only when returning from system settings (resumeTick changes).
+    // Uses forward-only guards so manual button clicks are never overwritten.
+    LaunchedEffect(resumeTick) {
+        val enabled = isModHackEnabled(context)
+        val selected = isModHackSelected(context)
+        if (enabled && selected && currentStep < 3) {
+            currentStep = 3
+        } else if (enabled && currentStep < 2) {
+            currentStep = 2
+        }
     }
 
     Column(

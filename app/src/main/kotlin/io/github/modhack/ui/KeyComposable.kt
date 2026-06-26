@@ -119,7 +119,8 @@ fun KeyComposable(
             .combinedClickable(
                 onClick = {
                     isPressed = false
-                    service.onKey(key.codes.first())
+                    val code = key.codes.firstOrNull() ?: return@combinedClickable
+                    service.onKey(code)
                 },
                 onLongClick = {
                     isPressed = false
@@ -153,7 +154,7 @@ fun KeyComposable(
             Text(
                 text = displayLabel ?: "",
                 color = fgColor,
-                fontSize = with(density) { (prefs.labelScale * 18).sp.value }.sp,
+                fontSize = (prefs.labelScale * 18).sp,
                 fontWeight = if (key.isModifier) FontWeight.Medium else FontWeight.Normal,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(4.dp)

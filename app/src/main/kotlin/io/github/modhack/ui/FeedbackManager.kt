@@ -27,8 +27,8 @@ class FeedbackManager(private val context: Context) {
         }
     }
 
-    private val audioManager: AudioManager by lazy {
-        context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private val audioManager: AudioManager? by lazy {
+        context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
     }
 
     /**
@@ -63,6 +63,6 @@ class FeedbackManager(private val context: Context) {
     }
 
     private fun performSound() {
-        audioManager.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD, -1f)
+        audioManager?.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD, -1f)
     }
 }

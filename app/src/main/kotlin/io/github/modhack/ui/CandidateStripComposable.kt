@@ -70,6 +70,7 @@ fun CandidateStripComposable(service: MHInputService) {
                         suggestion = suggestion,
                         colors = colors,
                         onClick = {
+                            if (suggestion.word.isEmpty()) return@CandidateWord
                             service.onKey(suggestion.word.first().code)
                             for (i in 1 until suggestion.word.length) {
                                 service.onKey(suggestion.word[i].code)
