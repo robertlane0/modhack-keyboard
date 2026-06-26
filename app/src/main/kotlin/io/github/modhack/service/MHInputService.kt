@@ -142,10 +142,6 @@ class MHInputService : InputMethodService(), CoroutineScope, LifecycleOwner, Vie
     override fun onCreateInputView(): View {
         val composeView = ComposeView(this)
 
-        composeView.setViewTreeLifecycleOwner(this)
-        composeView.setViewTreeSavedStateRegistryOwner(this)
-        composeView.setViewTreeViewModelStoreOwner(this)
-
         composeView.setViewCompositionStrategy(
             androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool
         )
@@ -156,7 +152,26 @@ class MHInputService : InputMethodService(), CoroutineScope, LifecycleOwner, Vie
             }
         }
         cachedInputView = composeView
-        return composeView
+
+        // Wrap in a FrameLayout so we can intercept onAttachedToWindow.
+        // The attach order is: parentPanel → wrapper.onAttachedToWindow →
+        // wrapper children (ComposeView). We set the lifecycle owners on the
+        // window root before the ComposeView tries to look them up.
+        val wrapper = object : android.widget.FrameLayout(this) {
+            override fun onAttachedToWindow() {
+                super.onAttachedToWindow()
+                rootView?.let { root ->
+                    root.setViewTreeLifecycleOwner(this@MHInputService)
+                    root.setViewTreeSavedStateRegistryOwner(this@MHInputService)
+                    root.setViewTreeViewModelStoreOwner(this@MHInputService)
+                }
+            }
+        }
+        wrapper.addView(composeView, android.widget.FrameLayout.LayoutParams(
+            android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+        ))
+        return wrapper
     }
 
     override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
