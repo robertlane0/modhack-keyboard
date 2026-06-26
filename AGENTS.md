@@ -19,8 +19,8 @@
 
 ---
 
-> **Build status:** `./gradlew assembleRelease` succeeds (50 tasks, 23 executed, 27 up-to-date).
-> **Phase 0/1/2/3/4/5/6/7/8:** ✅ Complete
+> **Build status:** `./gradlew clean && ./gradlew build` succeeds without warnings or errors.
+> **Phase 0/1/2/3/4/5/6/7/8:** ✅ Complete, now working on fixing bugs.
 
 ## Phase 0 — Project Scaffolding
 
