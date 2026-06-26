@@ -27,6 +27,9 @@ class KeyActionHandler(
      */
     private var shiftOneShot = false
 
+    /** Whether shift is in one-shot mode (auto-release after next key). */
+    val isShiftOneShot: Boolean get() = shiftOneShot
+
     /**
      * Main entry point for key dispatch.
      *
@@ -104,7 +107,8 @@ class KeyActionHandler(
     private fun handleShift() {
         val currentShift = ModifierState.isActive(Modifier.SHIFT)
         if (currentShift && !shiftOneShot) {
-            // Shift is already on from a previous press — lock it
+            // Caps lock is engaged — release it
+            ModifierState.release(Modifier.SHIFT)
             shiftOneShot = false
         } else if (!currentShift) {
             // Turn on shift in one-shot mode (auto-release after next key)
@@ -114,6 +118,15 @@ class KeyActionHandler(
             // shiftOneShot is true — pressing shift again locks it
             shiftOneShot = false
         }
+    }
+
+    /**
+     * Enables one-shot shift (auto-release after next character).
+     * Used by auto-cap and other external callers.
+     */
+    fun enableShiftOneShot() {
+        ModifierState.press(Modifier.SHIFT)
+        shiftOneShot = true
     }
 
     /**

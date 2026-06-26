@@ -131,7 +131,16 @@ class MHInputService : InputMethodService(), CoroutineScope, LifecycleOwner, Vie
         launch {
             try {
                 ModifierState.activeModifiers.collect { modifiers ->
-                    _keyboardState.value = _keyboardState.value.copy(activeModifiers = modifiers)
+                    val shiftState = if (ModifierState.isActive(io.github.modhack.model.Modifier.SHIFT)) {
+                        if (keyActionHandler.isShiftOneShot) io.github.modhack.model.ShiftState.ON
+                        else io.github.modhack.model.ShiftState.LOCKED
+                    } else {
+                        io.github.modhack.model.ShiftState.OFF
+                    }
+                    _keyboardState.value = _keyboardState.value.copy(
+                        activeModifiers = modifiers,
+                        shiftState = shiftState
+                    )
                 }
             } catch (e: Throwable) {
                 android.util.Log.e("MHInputService", "Failed to collect modifiers", e)
@@ -194,6 +203,10 @@ class MHInputService : InputMethodService(), CoroutineScope, LifecycleOwner, Vie
         composeSequence.cancel()
         deadAccentSequence.cancel()
         ModifierState.clearAll()
+        _keyboardState.value = _keyboardState.value.copy(
+            shiftState = io.github.modhack.model.ShiftState.OFF,
+            isCapsLock = false
+        )
         _suggestions.value = emptyList()
     }
 
@@ -290,7 +303,7 @@ class MHInputService : InputMethodService(), CoroutineScope, LifecycleOwner, Vie
         val textBefore = ic.getTextBeforeCursor(2)?.toString() ?: return
 
         if (textBefore.isEmpty() || textBefore.endsWith("\n") || textBefore.endsWith(". ") || textBefore.endsWith("? ") || textBefore.endsWith("! ")) {
-            ModifierState.press(io.github.modhack.model.Modifier.SHIFT)
+            keyActionHandler.enableShiftOneShot()
             _keyboardState.value = _keyboardState.value.copy(shiftState = io.github.modhack.model.ShiftState.ON)
         }
     }
