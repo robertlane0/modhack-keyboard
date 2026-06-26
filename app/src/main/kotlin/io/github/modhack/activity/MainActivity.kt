@@ -65,18 +65,20 @@ import io.github.modhack.R
  */
 class MainActivity : ComponentActivity() {
 
+    private var resumeTick by mutableIntStateOf(0)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                SetupWizard()
+                SetupWizard(resumeTick = resumeTick)
             }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        // The wizard will recompose and check IME status
+        resumeTick++
     }
 }
 
@@ -84,13 +86,13 @@ class MainActivity : ComponentActivity() {
  * Root composable for the setup wizard flow.
  */
 @Composable
-fun SetupWizard() {
+fun SetupWizard(resumeTick: Int) {
     val context = LocalContext.current
     var currentStep by remember { mutableIntStateOf(1) }
 
-    // Check IME status to determine starting step
-    val isImeEnabled = remember { isModHackEnabled(context) }
-    val isImeSelected = remember { isModHackSelected(context) }
+    // Re-evaluate on every resume (resumeTick changes when onResume fires)
+    val isImeEnabled = remember(resumeTick) { isModHackEnabled(context) }
+    val isImeSelected = remember(resumeTick) { isModHackSelected(context) }
 
     if (isImeEnabled && isImeSelected) {
         currentStep = 3

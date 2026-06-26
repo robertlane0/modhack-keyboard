@@ -4,7 +4,19 @@ import android.inputmethodservice.InputMethodService
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodSubtype
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.setViewTreeLifecycleOwner
+import androidx.savedstate.SavedStateRegistry
+import androidx.savedstate.SavedStateRegistryController
+import androidx.savedstate.SavedStateRegistryOwner
+import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import io.github.modhack.input.ComposeSequence
 import io.github.modhack.input.DeadAccentSequence
 import io.github.modhack.input.KeyActionHandler
@@ -36,9 +48,18 @@ import kotlinx.coroutines.launch
  * - [onUpdateSelection]: detects cursor movement and updates composing state.
  * - [onCurrentInputMethodSubtypeChanged]: handles system-initiated subtype changes.
  */
-class MHInputService : InputMethodService(), CoroutineScope {
+class MHInputService : InputMethodService(), CoroutineScope, LifecycleOwner, ViewModelStoreOwner, SavedStateRegistryOwner {
 
     override val coroutineContext = SupervisorJob() + Dispatchers.Main
+
+    private val lifecycleRegistry = LifecycleRegistry(this)
+    override val lifecycle: Lifecycle get() = lifecycleRegistry
+
+    private val _viewModelStore = ViewModelStore()
+    override val viewModelStore: ViewModelStore get() = _viewModelStore
+
+    private val savedStateRegistryController = SavedStateRegistryController.create(this)
+    override val savedStateRegistry: SavedStateRegistry get() = savedStateRegistryController.savedStateRegistry
 
     private lateinit var preferencesRepository: PreferencesRepository
     private lateinit var layoutCache: LayoutCache
@@ -72,6 +93,11 @@ class MHInputService : InputMethodService(), CoroutineScope {
 
     override fun onCreate() {
         super.onCreate()
+        savedStateRegistryController.performRestore(null)
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+
         preferencesRepository = PreferencesRepository(this)
         layoutCache = LayoutCache(this)
         
@@ -96,8 +122,23 @@ class MHInputService : InputMethodService(), CoroutineScope {
     }
 
     override fun onCreateInputView(): View {
-        val composeView = ComposeView(this).apply {
-            setContent {
+        val composeView = ComposeView(this)
+
+        composeView.setViewTreeLifecycleOwner(this)
+        composeView.setViewTreeSavedStateRegistryOwner(this)
+
+        // ViewTreeViewModelStoreOwner lives in lifecycle-viewmodel but the Kotlin
+        // compiler cannot resolve it directly, so we invoke it via reflection.
+        Class.forName("androidx.lifecycle.ViewTreeViewModelStoreOwner")
+            .getMethod("set", View::class.java, ViewModelStoreOwner::class.java)
+            .invoke(null, composeView, this)
+
+        composeView.setViewCompositionStrategy(
+            androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool
+        )
+        composeView.setContent {
+            val themeId by preferences.collectAsState()
+            io.github.modhack.ui.theme.MHTheme(themeId = themeId.theme) {
                 io.github.modhack.ui.KeyboardUI(service = this@MHInputService)
             }
         }
@@ -180,6 +221,8 @@ class MHInputService : InputMethodService(), CoroutineScope {
     }
 
     override fun onDestroy() {
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         super.onDestroy()
         cachedInputView = null
         cancel()
