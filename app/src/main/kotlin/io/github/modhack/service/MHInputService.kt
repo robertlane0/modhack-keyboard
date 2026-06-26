@@ -29,6 +29,7 @@ import io.github.modhack.model.KeyboardState
 import io.github.modhack.model.Suggestion
 import io.github.modhack.prefs.KeyboardPreferences
 import io.github.modhack.prefs.PreferencesRepository
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -52,7 +53,11 @@ import kotlinx.coroutines.launch
  */
 class MHInputService : InputMethodService(), CoroutineScope, LifecycleOwner, ViewModelStoreOwner, SavedStateRegistryOwner {
 
-    override val coroutineContext = SupervisorJob() + Dispatchers.Main
+    private val exceptionHandler = CoroutineExceptionHandler { _, e ->
+        android.util.Log.e("MHInputService", "Unhandled coroutine exception", e)
+    }
+
+    override val coroutineContext = SupervisorJob() + Dispatchers.Main + exceptionHandler
 
     private val lifecycleRegistry = LifecycleRegistry(this)
     override val lifecycle: Lifecycle get() = lifecycleRegistry
@@ -109,9 +114,13 @@ class MHInputService : InputMethodService(), CoroutineScope, LifecycleOwner, Vie
         val prefsFlow = MutableStateFlow(KeyboardPreferences())
         preferences = prefsFlow.asStateFlow()
         launch {
-            preferencesRepository.preferences.collect { prefs ->
-                prefsFlow.value = prefs
-                updateLayout()
+            try {
+                preferencesRepository.preferences.collect { prefs ->
+                    prefsFlow.value = prefs
+                    updateLayout()
+                }
+            } catch (e: Throwable) {
+                android.util.Log.e("MHInputService", "Failed to collect preferences", e)
             }
         }
         
@@ -120,8 +129,12 @@ class MHInputService : InputMethodService(), CoroutineScope, LifecycleOwner, Vie
         keyActionHandler = KeyActionHandler(this, inputConnectionManager, wordComposer)
         
         launch {
-            ModifierState.activeModifiers.collect { modifiers ->
-                _keyboardState.value = _keyboardState.value.copy(activeModifiers = modifiers)
+            try {
+                ModifierState.activeModifiers.collect { modifiers ->
+                    _keyboardState.value = _keyboardState.value.copy(activeModifiers = modifiers)
+                }
+            } catch (e: Throwable) {
+                android.util.Log.e("MHInputService", "Failed to collect modifiers", e)
             }
         }
     }
@@ -147,13 +160,17 @@ class MHInputService : InputMethodService(), CoroutineScope, LifecycleOwner, Vie
     }
 
     override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
-        super.onStartInput(attribute, restarting)
-        wordComposer.reset()
-        composeSequence.cancel()
-        deadAccentSequence.cancel()
-        detectLocale(attribute)
-        applyAutoCap(attribute)
-        updateLayout()
+        try {
+            super.onStartInput(attribute, restarting)
+            wordComposer.reset()
+            composeSequence.cancel()
+            deadAccentSequence.cancel()
+            detectLocale(attribute)
+            applyAutoCap(attribute)
+            updateLayout()
+        } catch (e: Throwable) {
+            android.util.Log.e("MHInputService", "onStartInput failed", e)
+        }
     }
 
     override fun onFinishInput() {
@@ -322,8 +339,12 @@ class MHInputService : InputMethodService(), CoroutineScope, LifecycleOwner, Vie
 
         layoutJob?.cancel()
         layoutJob = launch {
-            val layout = layoutCache.getLayout(mode, locale, resources.configuration.orientation, fullModeStr)
-            _keyboardState.value = _keyboardState.value.copy(layoutId = layout.id, layout = layout)
+            try {
+                val layout = layoutCache.getLayout(mode, locale, resources.configuration.orientation, fullModeStr)
+                _keyboardState.value = _keyboardState.value.copy(layoutId = layout.id, layout = layout)
+            } catch (e: Throwable) {
+                android.util.Log.e("MHInputService", "Failed to load layout", e)
+            }
         }
     }
     
