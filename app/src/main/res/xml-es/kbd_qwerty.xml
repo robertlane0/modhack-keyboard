@@ -39,7 +39,7 @@
     </Row>
     <Row>
         <Key app:codes="-2" app:label="@string/label_symbols" app:keyWidth="15%p" />
-        <Key app:codes="-104" app:label="Globe" app:keyWidth="10%p" />
+        <Key app:codes="44" app:label="," app:keyWidth="10%p" />
         <Key app:codes="32" app:label="" app:keyWidth="50%p" />
         <Key app:codes="46" app:label="." app:keyWidth="10%p" />
         <Key app:codes="10" app:label="Enter" app:keyWidth="15%p" />

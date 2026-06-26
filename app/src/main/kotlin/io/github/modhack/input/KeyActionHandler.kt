@@ -153,7 +153,10 @@ class KeyActionHandler(
     }
 
     private fun handleSettings() {
-        // Settings launch handled by the service or activity starter
+        val intent = android.content.Intent(service, io.github.modhack.activity.SettingsActivity::class.java).apply {
+            addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        service.startActivity(intent)
     }
 
     private fun sendTab() {
