@@ -22,6 +22,17 @@
 > **Build status:** `./gradlew clean && ./gradlew build` succeeds without warnings or errors.
 > **Phase 0/1/2/3/4/5/6/7/8:** ✅ Complete, now working on fixing bugs.
 
+### Known Bugs Fixed
+
+| Bug | Root Cause | Files Changed |
+|-----|-----------|---------------|
+| Keyboard renders as tiny grey rectangle (~10% of screen) with invisible keys | `KeyComposable` used `.toDp()` on plain Float values (treats as pixels → divides by density ~3x); key width formula used vertical `keyboardHeight` for horizontal sizing; `RowComposable` row height formula `defaultHeight * keyboardHeight / 500f` produced ~5dp rows; `KeyboardComposable` Column had no fixed height so it wrapped to tiny content | `KeyboardComposable.kt`, `RowComposable.kt`, `KeyComposable.kt` |
+
+**Fix details:**
+- `KeyboardComposable.kt`: Added `.height(keyboardHeightDp.dp)` to the root Column; passes `totalLayoutHeight` to rows.
+- `RowComposable.kt`: Row height = `keyboardHeight * row.defaultHeight / totalLayoutHeight`; keys wrapped in `Modifier.weight()` for proportional width.
+- `KeyComposable.kt`: Replaced `keyboardHeight` param with `keyHeight` + `rowDefaultHeight`; key height = `keyHeight * key.height / rowDefaultHeight`; key width handled by parent Row weight. Removed broken `.toDp()` and `.width()` calls.
+
 ## Phase 0 — Project Scaffolding
 
 **Goal:** A buildable, empty Android project with the correct Gradle configuration, dependency catalog, and manifest.
@@ -114,9 +125,9 @@
 
 | # | Task | Status | Output Files |
 |---|------|--------|-------------|
-| 4.1 | Implement `KeyboardComposable.kt` — root composable observing `keyboardState` and `preferences`, delegates to rows (§8.1). | ✅ | `ui/KeyboardComposable.kt` |
-| 4.2 | Implement `KeyComposable.kt` — single key rendering with `Modifier.pointerInput`, `detectTapGestures`, long press, and multitouch chording support (§8.2). | ✅ | `ui/KeyComposable.kt` |
-| 4.3 | Implement `RowComposable.kt` — renders a `Row` of `KeyComposable` items. | ✅ | `ui/RowComposable.kt` |
+| 4.1 | Implement `KeyboardComposable.kt` — root composable observing `keyboardState` and `preferences`, delegates to rows (§8.1). Fixed: added fixed `.height()` to Column so keyboard doesn't wrap to tiny content. | ✅ | `ui/KeyboardComposable.kt` |
+| 4.2 | Implement `KeyComposable.kt` — single key rendering with `Modifier.pointerInput`, `detectTapGestures`, long press, and multitouch chording support (§8.2). Fixed: replaced broken `.toDp()` sizing with proper `keyHeight`/`rowDefaultHeight` params; width now handled by parent Row weight. | ✅ | `ui/KeyComposable.kt` |
+| 4.3 | Implement `RowComposable.kt` — renders a `Row` of `KeyComposable` items. Fixed: row height now `keyboardHeight * row.defaultHeight / totalLayoutHeight`; keys wrapped in `Modifier.weight()` for proportional width. | ✅ | `ui/RowComposable.kt` |
 | 4.4 | Implement `PopupComposable.kt` — key press preview popup (replaces legacy `WindowManager` popups). | ✅ | `ui/PopupComposable.kt` |
 | 4.5 | Implement `CandidateStripComposable.kt` — `LazyRow` of suggestions with long-press delete menu (§8.3). | ✅ | `ui/CandidateStripComposable.kt` |
 | 4.6 | Implement `PointerTracker.kt` — lightweight multi-pointer tracking using Compose `PointerInputChange` (§9.1). | ✅ | `input/PointerTracker.kt` |

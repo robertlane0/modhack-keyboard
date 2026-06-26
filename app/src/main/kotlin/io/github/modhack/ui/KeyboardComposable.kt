@@ -6,7 +6,7 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -56,6 +56,7 @@ fun KeyboardUI(service: MHInputService) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .height(keyboardHeightDp.dp)
             .background(colors.keyboardBackground)
             // Handle navigation bar insets for edge-to-edge display
             .windowInsetsPadding(WindowInsets.navigationBars)
@@ -68,7 +69,7 @@ fun KeyboardUI(service: MHInputService) {
                         val (dx, dy) = dragAmount
                         val threshold = 50f
 
-                        if (kotlin.math.abs(dy) > kotlin.math.abs(dx) && kotlin.math.abs(dy) > threshold) {
+                        if (kotlin.math.abs(dy.toFloat()) > kotlin.math.abs(dx.toFloat()) && kotlin.math.abs(dy.toFloat()) > threshold) {
                             if (dy > 0) {
                                 // Swipe down
                                 when (swipeDownAction) {
@@ -91,11 +92,13 @@ fun KeyboardUI(service: MHInputService) {
     ) {
         CandidateStripComposable(service)
 
+        val totalLayoutHeight = keyboardState.layout?.height ?: 40
         keyboardState.layout?.rows?.forEach { row ->
             RowComposable(
                 row = row,
                 service = service,
-                keyboardHeight = keyboardHeightDp
+                keyboardHeight = keyboardHeightDp,
+                totalLayoutHeight = totalLayoutHeight
             )
         }
     }

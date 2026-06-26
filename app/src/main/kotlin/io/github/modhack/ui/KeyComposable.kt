@@ -4,10 +4,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -48,7 +47,8 @@ import io.github.modhack.ui.theme.LocalKeyboardColors
  *
  * @param key The key data to render.
  * @param service The input service for dispatching key actions.
- * @param keyboardHeight Total keyboard height in dp for proportional sizing.
+ * @param keyHeight Row height in dp used to scale the key vertically.
+ * @param rowDefaultHeight Abstract height unit of the parent row.
  * @param onLongPress Callback when the key is long-pressed (for popup display).
  */
 @OptIn(ExperimentalFoundationApi::class)
@@ -56,11 +56,11 @@ import io.github.modhack.ui.theme.LocalKeyboardColors
 fun KeyComposable(
     key: Key,
     service: MHInputService,
-    keyboardHeight: Float = 200f,
+    keyHeight: Float = 70f,
+    rowDefaultHeight: Int = 10,
     onLongPress: (Key) -> Unit = {}
 ) {
     val colors = LocalKeyboardColors.current
-    val density = LocalDensity.current
     val prefs by service.preferences.collectAsState()
     val keyboardState by service.keyboardState.collectAsState()
 
@@ -92,15 +92,7 @@ fun KeyComposable(
         else -> colors.keyForeground
     }
 
-    val keyWidthDp = with(density) {
-        val baseUnit = keyboardHeight / 4.5f
-        (key.width * baseUnit / 100).toDp()
-    }
-
-    val keyHeightDp = with(density) {
-        val baseUnit = keyboardHeight / 5f
-        (key.height * baseUnit / 100).toDp()
-    }
+    val keyHeightDp = (keyHeight * key.height / rowDefaultHeight).dp
 
     // Build accessible content description
     val contentDescription = buildKeyContentDescription(key, isShifted, isModifierActive)
@@ -108,7 +100,7 @@ fun KeyComposable(
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .width(keyWidthDp)
+            .fillMaxWidth()
             .height(keyHeightDp)
             .padding(2.dp)
             .clip(RoundedCornerShape(6.dp))
